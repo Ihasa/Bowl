@@ -5,13 +5,14 @@ public class Main{
         Game game = new Game("Tarou", "Hanako", "Saeko");
         try{
             Scanner s = new Scanner(System.in);
-            while(true){
-                game.show();
+            game.show();            
+            while(!game.isEnd()){
                 int pins = Integer.parseInt(s.nextLine());
                 if(pins == -1)
                     break;
                 else 
                     game.update(pins);
+                    game.show();                    
             }
             s.close();
         }catch(Exception e){
