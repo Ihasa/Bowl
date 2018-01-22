@@ -9,6 +9,9 @@ public class Player{
         for(int i = 0; i < score.length; i++){
             score[i] = new Frame();
         }
+        for(int i = 0; i < score.length-1; i++){
+            score[i].next = score[i+1];
+        }
     }
 
     public void update(int pins){
@@ -19,10 +22,10 @@ public class Player{
     }
 
     public int getTotal(){
-        // wrong logic
         int sum = 0;
+        int frameIdx = 0;
         for(Frame f : score){
-            sum+=f.sumScore();
+            sum+=f.sumOfScore(frameIdx++);
         }
         return sum;
     }
@@ -36,11 +39,20 @@ public class Player{
 
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append("|").append(name).append("\t|");
+        sb.append(String.format("|%8s|",name));
         for(int i = 0; i < 10; i++){
-            sb.append(score[i].toString());
+            sb.append(score[i].toStringScores(i)).append("|");
         }
-        sb.append(getTotal()).append("|");
+
+        sb.append("\n");
+
+        sb.append(String.format("|%8s|",""));
+        for(int i = 0; i < 10; i++){
+            sb.append(score[i].toStringSumOfScores(i)).append("|");
+        }
+
+        sb.append(String.format("%5d", getTotal())).append("|");
+
         return sb.toString();
     }
 }

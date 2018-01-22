@@ -1,6 +1,7 @@
 public class Frame{
     private int nantoume;
     private int[] scores = new int[3];
+    public  Frame next;
 
     public Frame(){
         nantoume = 0;
@@ -12,7 +13,7 @@ public class Frame{
         return scores[index];
     }
 
-    public int sumScore(){
+    public int sumOfPins(){
         int ret = 0;
         for(int i = 0; i < 3; i++){
             ret+=scores[i];
@@ -20,27 +21,48 @@ public class Frame{
         return ret;
     }
 
-    public boolean isEnd(int frameIdx){
-        if(sumScore() == 10){
-            return true;
-        } else {
-            return ((frameIdx == 9)&&(nantoume == 3)) || 
-                   ((frameIdx != 9)&&(nantoume==2)); 
-        }    
-        
+    public int sumOfScore(int frameIdx){
+        if((frameIdx == 9) || (sumOfPins() < 10)){  //10フレーム目or残ピンあり
+            return sumOfPins();
+        }else if(scores[0] == 10){   //ストライク
+            if((frameIdx == 8) || (next.scores[0] < 10)){  //9フレーム目or次はストライクでない
+                return 10 + next.scores[0] + next.scores[1];
+            } else {    //次もストライク
+                return 20 + next.next.scores[0];
+            }
+        } else {  //スペア
+            return 10+next.scores[0];
+        }
     }
 
-    public String toString(){
-        // wrong logic
+    public boolean isEnd(int frameIdx){
+        if(frameIdx == 9){
+            return (nantoume == 3) || ((nantoume == 2) && sumOfPins() < 10);
+        } else{
+            return (sumOfPins() == 10) || (nantoume == 2);
+        }        
+    }
+
+    //各投球結果を返す
+    public String toStringScores(int frameIdx){
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < 3; i++){
+        int scoreNum = ((frameIdx == 9) ? 3 : 2);
+        for(int i = 0; i < scoreNum; i++){
             if(nantoume > i){
-                sb.append(scores[i]);
+                sb.append(String.format("%2d",scores[i]));
             }else{
-                sb.append(" ");
+                sb.append(String.format("%2s",""));
             }
-            sb.append("|");
+
+            if(i != scoreNum-1){
+                sb.append("|");
+            }
         }
         return sb.toString();
+    }
+
+    //フレームの合計スコアを返す
+    public String toStringSumOfScores(int frameIdx){
+        return String.format(((frameIdx==9) ? "%8d":"%5d"),sumOfScore(frameIdx));
     }
 }

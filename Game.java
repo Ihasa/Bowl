@@ -35,7 +35,7 @@ public class Game{
     public void show(){
         String msg = (frameIdx == 10) ? "Winner:"+leaders() : (currentPlayer.getName()+"の番");
 		System.out.println(msg);
-        System.out.println("|\t|  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  10   |");
+        System.out.println("|        |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |   10   |Total|");
         for(Player p : players){
             System.out.println(p.toString());
         }
